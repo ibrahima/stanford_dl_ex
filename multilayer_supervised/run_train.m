@@ -14,6 +14,10 @@ addpath(genpath('../common/minFunc_2012/minFunc'));
 %% load mnist data
 [data_train, labels_train, data_test, labels_test] = load_preprocess_mnist();
 
+NTRAIN = 10000;
+data_train = data_train(:,1:NTRAIN);
+labels_train = labels_train(1:NTRAIN);
+
 %% populate ei with the network architecture to train
 % ei is a structure you can use to store hyperparameters of the network
 % the architecture specified below should produce  100% training accuracy
@@ -47,12 +51,13 @@ options.Method = 'lbfgs';
     params,options,ei, data_train, labels_train);
 
 %% compute accuracy on the test and train set
-[~, ~, pred] = supervised_dnn_cost( opt_params, ei, data_test, [], true);
-[~,pred] = max(pred);
-acc_test = mean(pred'==labels_test);
+[~, ~, pred] = supervised_dnn_cost( opt_params, ei, data_test, [], ...
+                                    true);
+[~,pred] = max(pred, [], 2);
+acc_test = mean(pred==labels_test);
 fprintf('test accuracy: %f\n', acc_test);
 
 [~, ~, pred] = supervised_dnn_cost( opt_params, ei, data_train, [], true);
-[~,pred] = max(pred);
-acc_train = mean(pred'==labels_train);
+[~,pred] = max(pred, [], 2);
+acc_train = mean(pred==labels_train);
 fprintf('train accuracy: %f\n', acc_train);
