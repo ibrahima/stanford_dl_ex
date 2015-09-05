@@ -24,10 +24,6 @@ m = size(data,2); % Number of samples
 K = size(stack{numHidden+1}.W, 1); % Number of classes
 D = size(data, 1); % Number of dimensions (length of input vector)
 
-labels_nice = zeros(m, K);
-labels_ind = sub2ind(size(labels_nice), 1:m, labels');
-labels_nice(labels_ind) = 1;
-
 nl = numHidden+2;
 pred_prob = zeros(m, K);
 Delta_W = cell(nl, 1);
@@ -79,6 +75,11 @@ end;
 %% compute cost
 %%% YOUR CODE HERE %%%
 cost = 0;
+
+labels_nice = zeros(m, K);
+labels_ind = sub2ind(size(labels_nice), 1:m, labels');
+labels_nice(labels_ind) = 1;
+
 for i=1:m
     cost = cost - log(pred_prob(i, labels(i)));
 end
